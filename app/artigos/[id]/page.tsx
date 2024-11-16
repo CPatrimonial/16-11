@@ -2,43 +2,57 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 // Tipos
-interface Params {
-  id: string;
+interface PageProps {
+  params: {
+    id: string;
+  };
 }
 
-interface Props {
-  params: Params;
-}
+// Lista temporária de artigos
+const artigos = [
+  { id: '1', titulo: 'Artigo 1', conteudo: 'Conteúdo em breve' },
+  { id: '2', titulo: 'Artigo 2', conteudo: 'Conteúdo em breve' },
+];
 
-// Metadata dinâmica
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const artigo = artigos.find(a => a.id === params.id);
+  
+  if (!artigo) {
+    return {
+      title: 'Artigo não encontrado',
+    };
+  }
+
   return {
-    title: `Artigo ${params.id} | Crédito Patrimonial`,
+    title: `${artigo.titulo} | Crédito Patrimonial`,
     description: 'Artigo sobre crédito com garantia de imóvel',
   };
 }
 
-// Função para gerar parâmetros estáticos (se necessário)
 export async function generateStaticParams() {
-  // Retorne um array com os IDs dos artigos que devem ser gerados estaticamente
-  return [
-    { id: '1' },
-    { id: '2' },
-    // ... outros IDs
-  ];
+  return artigos.map(artigo => ({
+    id: artigo.id,
+  }));
 }
 
-// Componente principal
-export default async function ArtigoPage({ params }: Props) {
-  // Verificar se o artigo existe
-  if (!params.id) {
+export default function ArtigoPage({ params }: PageProps) {
+  const artigo = artigos.find(a => a.id === params.id);
+
+  if (!artigo) {
     notFound();
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-4">Artigo {params.id}</h1>
-      {/* Conteúdo do artigo */}
+    <div className="container mx-auto py-8 px-4">
+      <article className="prose lg:prose-xl mx-auto">
+        <h1 className="text-3xl font-bold mb-4">{artigo.titulo}</h1>
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <p className="text-gray-600">{artigo.conteudo}</p>
+          <p className="text-sm text-gray-500 mt-4">
+            Em breve, mais conteúdo estará disponível.
+          </p>
+        </div>
+      </article>
     </div>
   );
 }
