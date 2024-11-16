@@ -1,20 +1,19 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-// Tipos
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
 // Lista temporária de artigos
 const artigos = [
   { id: '1', titulo: 'Artigo 1', conteudo: 'Conteúdo em breve' },
   { id: '2', titulo: 'Artigo 2', conteudo: 'Conteúdo em breve' },
 ];
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+// Tipos corretos para Next.js 13+
+type Props = {
+  params: { id: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const artigo = artigos.find(a => a.id === params.id);
   
   if (!artigo) {
@@ -35,7 +34,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ArtigoPage({ params }: PageProps) {
+export default function ArtigoPage({ params }: Props) {
   const artigo = artigos.find(a => a.id === params.id);
 
   if (!artigo) {
