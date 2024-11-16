@@ -34,19 +34,17 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ArtigoPage({ params }: Props) {
-  const artigo = artigos.find(a => a.id === params.id);
-
-  if (!artigo) {
-    notFound();
-  }
-
+export default function ArtigoPage({
+  params,
+}: {
+  params: { id: string }
+}) {
   return (
     <div className="container mx-auto py-8 px-4">
       <article className="prose lg:prose-xl mx-auto">
-        <h1 className="text-3xl font-bold mb-4">{artigo.titulo}</h1>
+        <h1 className="text-3xl font-bold mb-4">Artigo {params.id}</h1>
         <div className="bg-gray-100 p-4 rounded-lg">
-          <p className="text-gray-600">{artigo.conteudo}</p>
+          <p className="text-gray-600">Conteúdo em desenvolvimento</p>
           <p className="text-sm text-gray-500 mt-4">
             Em breve, mais conteúdo estará disponível.
           </p>
