@@ -8,5 +8,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ['/private/', '/admin/'],
     },
     sitemap: 'https://www.creditopatrimonial.com.br/sitemap.xml',
-  };tryrererwerwe
+  };
 }
