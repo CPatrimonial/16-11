@@ -1,11 +1,25 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { ProjectInfo } from './components/project-info';
 import { CreditInfo } from './components/credit-info';
 import { OpportunityAnalysis } from './components/opportunity-analysis';
 
 // Definir interfaces para os tipos
+interface ProjetoInfo {
+  descricao: string;
+  ganhosQualidadeVida: number;
+  ganhoValorizacao: number;
+  ganhoAluguel: number;
+  economiaGerada: number;
+  investimentoViabilizacao: number;
+}
+
+interface CreditoInfo {
+  taxaJurosMensal: number;
+  quantidadeParcelas: number;
+}
+
 interface CustoCreditoInfo {
   parcelaMensal: number;
   custoTotal: number;
@@ -30,7 +44,7 @@ interface CustoOportunidade {
 }
 
 const CustoOportunidadeCalculadora = () => {
-  const [projetoInfo, setProjetoInfo] = useState({
+  const [projetoInfo, setProjetoInfo] = useState<ProjetoInfo>({
     descricao: '',
     ganhosQualidadeVida: 0,
     ganhoValorizacao: 0,
@@ -39,7 +53,7 @@ const CustoOportunidadeCalculadora = () => {
     investimentoViabilizacao: 0
   });
 
-  const [creditoInfo, setCreditoInfo] = useState({
+  const [creditoInfo, setCreditoInfo] = useState<CreditoInfo>({
     taxaJurosMensal: 0,
     quantidadeParcelas: 36
   });
@@ -57,77 +71,93 @@ const CustoOportunidadeCalculadora = () => {
     : 0;
 
   // Tipagem dos handlers
-  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setProjetoInfo({ ...projetoInfo, [e.target.name]: parseFloat(e.target.value) || 0 });
-  };
+  const handleProjetoChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProjetoInfo((prev) => ({
+      ...prev,
+      [name]: name === 'descricao' ? value : Number(value)
+    }));
+  }, []);
 
-  const handleCreditoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCreditoInfo({ ...creditoInfo, [e.target.name]: parseFloat(e.target.value) || 0 });
-  };
+  const handleCreditoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCreditoInfo((prev) => ({
+      ...prev,
+      [name]: Number(value)
+    }));
+  }, []);
 
-  const handleParcelasChange = (value: number[]) => {
-    setCreditoInfo({ ...creditoInfo, quantidadeParcelas: value[0] });
-  };
+  const handleParcelasChange = useCallback((value: number[]) => {
+    setCreditoInfo((prev) => ({
+      ...prev,
+      quantidadeParcelas: value[0]
+    }));
+  }, []);
 
-  const calcularCustoCredito = () => {
+  const calcularCustoCredito = useCallback(() => {
     const { taxaJurosMensal, quantidadeParcelas } = creditoInfo;
     const valorCredito = projetoInfo.investimentoViabilizacao * 1.11;
     const taxaMensal = taxaJurosMensal / 100;
-    const parcelaMensal = (valorCredito * taxaMensal * Math.pow(1 + taxaMensal, quantidadeParcelas)) / 
-                          (Math.pow(1 + taxaMensal, quantidadeParcelas) - 1);
+
+    if (taxaMensal <= 0 || quantidadeParcelas <= 0) return;
+
+    const parcelaMensal = 
+      (valorCredito * (taxaMensal * Math.pow(1 + taxaMensal, quantidadeParcelas))) /
+      (Math.pow(1 + taxaMensal, quantidadeParcelas) - 1);
+
     const custoTotal = parcelaMensal * quantidadeParcelas;
+    const jurosTotal = custoTotal - valorCredito;
 
     setCustoCreditoInfo({
       parcelaMensal,
       custoTotal,
-      jurosTotal: custoTotal - valorCredito
+      jurosTotal
     });
 
-    const dadosPagamento = [];
+    // Calcular dados para o gráfico de pagamento
+    const dadosPagamento: DadosPagamento[] = [];
     let saldoDevedor = valorCredito;
+
     for (let mes = 1; mes <= quantidadeParcelas; mes++) {
       const juros = saldoDevedor * taxaMensal;
       const amortizacao = parcelaMensal - juros;
       saldoDevedor -= amortizacao;
+
       dadosPagamento.push({
         mes,
-        saldoDevedor: Math.max(saldoDevedor, 0),
+        saldoDevedor: Math.max(0, saldoDevedor),
         parcela: parcelaMensal
       });
     }
+
     setDadosGraficoPagamento(dadosPagamento);
-  };
+  }, [creditoInfo, projetoInfo.investimentoViabilizacao]);
 
-  const calcularCustoOportunidade = () => {
-    if (!custoCreditoInfo) {
-      alert("Por favor, calcule o custo de crédito primeiro.");
-      return;
-    }
+  const calcularCustoOportunidade = useCallback(() => {
+    if (!custoCreditoInfo) return;
 
-    const anos = creditoInfo.quantidadeParcelas / 12;
-    const dadosAnuais: DadosGrafico[] = [];
-    let custoOportunidadeEncontrado: CustoOportunidade | null = null;
+    const dadosGrafico: DadosGrafico[] = [];
+    const anos = Math.ceil(creditoInfo.quantidadeParcelas / 12);
 
     for (let ano = 1; ano <= anos; ano++) {
-      const custoCreditoAcumulado = custoCreditoInfo.parcelaMensal * ano * 12;
+      const custoEmprestimo = custoCreditoInfo.parcelaMensal * 12 * ano;
+      const ganhoPotencial = (
+        projetoInfo.ganhosQualidadeVida +
+        projetoInfo.ganhoValorizacao +
+        projetoInfo.ganhoAluguel +
+        projetoInfo.economiaGerada
+      ) * ano;
 
-      dadosAnuais.push({
+      dadosGrafico.push({
         ano,
         ganhoPotencial,
-        custoEmprestimo: custoCreditoAcumulado
+        custoEmprestimo
       });
-
-      if (ganhoPotencial > custoCreditoAcumulado && !custoOportunidadeEncontrado) {
-        custoOportunidadeEncontrado = {
-          ano,
-          valor: ganhoPotencial - custoCreditoAcumulado
-        };
-      }
     }
 
-    setDadosGrafico(dadosAnuais);
+    setDadosGrafico(dadosGrafico);
     setGraficoVisivel(true);
-  };
+  }, [creditoInfo.quantidadeParcelas, custoCreditoInfo, projetoInfo]);
 
   const formatoMoeda = new Intl.NumberFormat('pt-BR', {
     style: 'currency',

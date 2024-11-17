@@ -31,6 +31,9 @@ interface Cenario {
   };
 }
 
+type CamposCenario = keyof Omit<Cenario, 'id' | 'nome'>;
+type ValorCenario = number | { mes: number; valor: number };
+
 const CalculadoraAmortizacao = () => {
   const [cenarios, setCenarios] = useState([
     {
@@ -123,17 +126,16 @@ const CalculadoraAmortizacao = () => {
     setCenarioAtivo(novoCenario.id.toString());
   }, [cenarios]);
 
-  const atualizarCenario = useCallback((
-    id: number,
-    campo: keyof Omit<Cenario, 'id' | 'nome'>,
-    valor: number
-  ) => {
-    setCenarios((prevCenarios) =>
-      prevCenarios.map((cenario) =>
-        cenario.id === id ? { ...cenario, [campo]: valor } : cenario
-      )
-    );
-  }, []);
+  const atualizarCenario = useCallback(
+    (id: number, campo: CamposCenario, valor: ValorCenario) => {
+      setCenarios((prevCenarios) =>
+        prevCenarios.map((cenario) =>
+          cenario.id === id ? { ...cenario, [campo]: valor } : cenario
+        )
+      );
+    },
+    []
+  );
 
   const CORES = [
     '#003399',
