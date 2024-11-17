@@ -1,12 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
-    domains: [], // Adicione aqui os domínios das imagens externas se necessário
-    unoptimized: false,
+    domains: ['images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
-};
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig
