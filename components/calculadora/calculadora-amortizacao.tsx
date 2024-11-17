@@ -18,9 +18,17 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
 interface Cenario {
-  // defina as propriedades necessárias
-  tipo: string;
-  // outras propriedades...
+  id: number;
+  nome: string;
+  valorEmprestimo: number;
+  taxaJurosMensal: number;
+  prazoMeses: number;
+  pagamentosExtrasMensais: number;
+  pagamentosExtrasAnuais: number;
+  pagamentoExtraPontual: {
+    mes: number;
+    valor: number;
+  };
 }
 
 const CalculadoraAmortizacao = () => {
