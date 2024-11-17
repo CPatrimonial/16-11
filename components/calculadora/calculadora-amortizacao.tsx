@@ -17,6 +17,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
+interface Cenario {
+  // defina as propriedades necessárias
+  tipo: string;
+  // outras propriedades...
+}
+
 const CalculadoraAmortizacao = () => {
   const [cenarios, setCenarios] = useState([
     {
@@ -33,7 +39,7 @@ const CalculadoraAmortizacao = () => {
 
   const [cenarioAtivo, setCenarioAtivo] = useState('1');
 
-  const calcularAmortizacao = useCallback((cenario, comExtras = true) => {
+  const calcularAmortizacao = useCallback((cenario: Cenario, comExtras = true) => {
     const {
       valorEmprestimo,
       taxaJurosMensal,
