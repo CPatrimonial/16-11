@@ -123,7 +123,11 @@ const CalculadoraAmortizacao = () => {
     setCenarioAtivo(novoCenario.id.toString());
   }, [cenarios]);
 
-  const atualizarCenario = useCallback((id, campo, valor) => {
+  const atualizarCenario = useCallback((
+    id: number,
+    campo: keyof Omit<Cenario, 'id' | 'nome'>,
+    valor: number
+  ) => {
     setCenarios((prevCenarios) =>
       prevCenarios.map((cenario) =>
         cenario.id === id ? { ...cenario, [campo]: valor } : cenario
