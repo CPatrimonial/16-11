@@ -4,18 +4,14 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Slider } from '@/components/ui/slider';
 import { 
-  ComposedChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer, 
+  ResponsiveContainer,
+  ComposedChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
   Legend,
-  ReferenceLine,
-  Area,
-  linearGradient,
-  stop
+  Line
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
