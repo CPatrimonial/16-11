@@ -11,7 +11,11 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Legend
+  Legend,
+  ReferenceLine,
+  Area,
+  linearGradient,
+  stop
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
