@@ -421,13 +421,6 @@ const artigos = [
   }
 ];
 
-// Define the Props type for the page parameters
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
 // Metadata generation for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const artigo = artigos.find(a => a.id === params.id);

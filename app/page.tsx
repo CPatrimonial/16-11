@@ -27,8 +27,8 @@ export default function Home() {
             quality={75}
           />
         </div>
-        <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="mb-3 text-blue-300 font-medium tracking-wide text-lg uppercase">
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-3 text-blue-300 font-semibold tracking-wide text-lg uppercase">
             Home Equity | Crédito com Garantia de Imóvel
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
@@ -38,10 +38,10 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl font-medium text-blue-300">
               Realize seus projetos de maneira inteligente
             </h2>
-            <p className="text-lg sm:text-xl text-gray-300 leading-relaxed">
+            <p className="text-xl text-gray-300 leading-relaxed font-light">
               Transforme seu imóvel em uma ferramenta para viabilizar suas ambições
             </p>
-            <p className="text-lg sm:text-xl text-gray-300/90 leading-relaxed max-w-2xl mx-auto">
+            <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
               Entenda se o home equity faz sentido para seu caso, e como fazer o seu projeto da maneira mais segura
             </p>
           </div>
