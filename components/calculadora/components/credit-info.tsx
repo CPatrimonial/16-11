@@ -13,7 +13,7 @@ import {
   ResponsiveContainer, 
   Legend, 
   ReferenceLine,
-  AreaChart as Area
+  Area
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -135,115 +135,24 @@ export function CreditInfo({
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Análise de Custo de Oportunidade</h3>
                 <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] bg-white/50 p-2 sm:p-4 rounded-xl">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart 
+                    <ComposedChart
                       data={dadosGrafico}
-                      margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
+                      margin={{
+                        top: 10,
+                        right: 30,
+                        left: 0,
+                        bottom: 0,
+                      }}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                      <XAxis 
-                        dataKey="ano" 
-                        stroke="#64748b"
-                        tickMargin={8}
-                        fontSize={10}
-                        interval="preserveStartEnd"
-                      />
-                      <YAxis 
-                        scale="log" 
-                        domain={['auto', 'auto']} 
-                        tickFormatter={(value) => formatoMoeda.format(value)}
-                        stroke="#64748b"
-                        tickMargin={8}
-                        fontSize={10}
-                        width={80}
-                      />
-                      {/* Área verde para custo de oportunidade positivo */}
-                      <Area
-                        dataKey={(data) => {
-                          const ganhoPotencial = dadosGrafico[0]?.ganhoPotencial;
-                          const custoOportunidade = ganhoPotencial - data.custoEmprestimo;
-                          return custoOportunidade > 0 ? data.custoEmprestimo : null;
-                        }}
-                        stroke="none"
-                        fill="#22c55e"
-                        name="custoOportunidadePositivo"
-                      />
-                      {/* Área vermelha para custo de oportunidade negativo */}
-                      <Area
-                        dataKey={(data) => {
-                          const ganhoPotencial = dadosGrafico[0]?.ganhoPotencial;
-                          const custoOportunidade = ganhoPotencial - data.custoEmprestimo;
-                          return custoOportunidade < 0 ? data.custoEmprestimo : null;
-                        }}
-                        stroke="none"
-                        fill="#dc2626"
-                        name="custoOportunidadeNegativo"
-                      />
-                      <Tooltip
-                        formatter={(value: number, name: string, props: any) => {
-                          const labels = {
-                            custoEmprestimo: "Custo do Crédito",
-                            referenceLine: "Ganho Potencial"
-                          };
-                          
-                          if (name === "custoEmprestimo") {
-                            const ganhoPotencial = dadosGrafico[0]?.ganhoPotencial;
-                            const custoOportunidade = ganhoPotencial - value;
-                            return [
-                              <div key={name}>
-                                <div>{labels[name as keyof typeof labels]}: {formatoMoeda.format(value)}</div>
-                                <div className="text-emerald-600">Custo de Oportunidade: {formatoMoeda.format(custoOportunidade)}</div>
-                              </div>,
-                              ""
-                            ];
-                          }
-                          
-                          return [formatoMoeda.format(value), labels[name as keyof typeof labels]];
-                        }}
-                        contentStyle={{
-                          background: 'rgba(255, 255, 255, 0.95)',
-                          border: 'none',
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                          fontSize: '12px',
-                          padding: '8px 12px'
-                        }}
-                      />
-                      <Legend 
-                        verticalAlign="top" 
-                        height={50}
-                        formatter={(value) => {
-                          const labels = {
-                            custoEmprestimo: "Custo do Crédito",
-                            referenceLine: "Ganho Potencial"
-                          };
-                          return labels[value as keyof typeof labels];
-                        }}
-                        wrapperStyle={{
-                          paddingBottom: '20px'
-                        }}
-                      />
-                      <ReferenceLine 
-                        y={dadosGrafico[0]?.ganhoPotencial} 
-                        stroke="#22c55e"
-                        strokeWidth={2}
-                        name="referenceLine"
-                        isFront={true}
-                        label={{
-                          value: formatoMoeda.format(dadosGrafico[0]?.ganhoPotencial),
-                          position: "right",
-                          fill: "#22c55e",
-                          fontSize: 12,
-                          offset: 10
-                        }}
-                      />
-                      <Line 
-                        type="monotone" 
-                        dataKey="custoEmprestimo"
-                        name="custoEmprestimo"
-                        stroke="#dc2626" 
-                        strokeWidth={2}
-                        dot={false}
-                      />
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis dataKey="mes" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+                      <ReferenceLine x="0" stroke="red" />
+                      <Line type="monotone" dataKey="custoEmprestimo" stroke="#8884d8" activeDot={{ r: 8 }} />
+                      <Line type="monotone" dataKey="ganhoPotencial" stroke="#82ca9d" />
+                      <Area type="monotone" dataKey="custoEmprestimo" stroke="#8884d8" fillOpacity={1} fill="#ccc" />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
