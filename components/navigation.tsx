@@ -17,19 +17,19 @@ const Navigation = () => {
   ];
 
   return (
-    <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b">
+    <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
+              <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
                 Crédito Patrimonial
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="hidden md:flex md:items-center md:space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -64,31 +64,35 @@ const Navigation = () => {
       </div>
 
       {/* Mobile Navigation Menu */}
-      {isOpen && (
-        <div className="md:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-b">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="text-gray-700 hover:text-blue-900 block px-3 py-2 text-base font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
+      <div 
+        className={`md:hidden fixed inset-0 transform ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } transition-transform duration-300 ease-in-out bg-white z-40`}
+      >
+        <div className="pt-16 pb-3 px-4 space-y-3 flex flex-col h-full">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="text-gray-700 hover:text-blue-900 hover:bg-blue-50 rounded-lg px-4 py-3 text-base font-medium transition-all duration-200"
+              onClick={() => setIsOpen(false)}
+            >
+              {item.label}
+            </Link>
+          ))}
+          <div className="mt-auto pb-6">
             <Button 
               variant="default" 
-              className="w-full bg-blue-900 hover:bg-blue-800 mt-4"
+              className="w-full bg-blue-900 hover:bg-blue-800 py-6 text-lg"
               asChild
             >
-              <Link href="/consultoria">
+              <Link href="/consultoria" onClick={() => setIsOpen(false)}>
                 Agendar Consultoria
               </Link>
             </Button>
           </div>
         </div>
-      )}
+      </div>
     </nav>
   );
 };

@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { ProjectInfo } from './components/project-info';
 import { CreditInfo } from './components/credit-info';
-import { OpportunityAnalysis } from './components/opportunity-analysis';
 
 // Definir interfaces para os tipos
 interface ProjetoInfo {
@@ -133,61 +132,95 @@ const CustoOportunidadeCalculadora = () => {
 
     const dadosGrafico: DadosGrafico[] = [];
     const anos = Math.ceil(creditoInfo.quantidadeParcelas / 12);
+    const ganhoPotencial = projetoInfo.ganhosQualidadeVida +
+                          projetoInfo.ganhoValorizacao +
+                          projetoInfo.ganhoAluguel +
+                          projetoInfo.economiaGerada;
 
-    for (let ano = 1; ano <= anos; ano++) {
-      const custoEmprestimo = custoCreditoInfo.parcelaMensal * 12 * ano;
-      const ganhoPotencial = (
-        projetoInfo.ganhosQualidadeVida +
-        projetoInfo.ganhoValorizacao +
-        projetoInfo.ganhoAluguel +
-        projetoInfo.economiaGerada
-      ) * ano;
+    const valorFinanciado = projetoInfo.investimentoViabilizacao * 1.0111;
+    const taxaMensal = creditoInfo.taxaJurosMensal / 100;
+    let saldoDevedor = valorFinanciado;
+    let totalPago = 0;
 
-      dadosGrafico.push({
-        ano,
-        ganhoPotencial,
-        custoEmprestimo
-      });
+    for (let mes = 1; mes <= creditoInfo.quantidadeParcelas; mes++) {
+      const juros = saldoDevedor * taxaMensal;
+      const amortizacao = custoCreditoInfo.parcelaMensal - juros;
+      
+      saldoDevedor = Math.max(0, saldoDevedor - amortizacao);
+      totalPago += custoCreditoInfo.parcelaMensal;
+
+      if (mes % 12 === 0 || mes === creditoInfo.quantidadeParcelas) {
+        const ano = Math.ceil(mes / 12);
+        dadosGrafico.push({
+          ano,
+          ganhoPotencial,
+          custoEmprestimo: totalPago
+        });
+      }
+
+      if (saldoDevedor === 0) break;
     }
 
     setDadosGrafico(dadosGrafico);
     setGraficoVisivel(true);
-  }, [creditoInfo.quantidadeParcelas, custoCreditoInfo, projetoInfo]);
+  }, [creditoInfo.quantidadeParcelas, creditoInfo.taxaJurosMensal, custoCreditoInfo, projetoInfo]);
 
-  const handleProjetoChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleCreditoChange = (field: keyof CreditoInfo, value: string) => {
+    const novoValor = Number(value);
+    if (!isNaN(novoValor)) {
+      setCreditoInfo(prev => ({
+        ...prev,
+        [field]: novoValor
+      }));
+      calcularCustoOportunidade();
+    }
+  };
+
+  const handleParcelasChange = (value: string) => {
+    const parcelas = Number(value);
+    if (!isNaN(parcelas)) {
+      setCreditoInfo(prev => ({
+        ...prev,
+        quantidadeParcelas: parcelas
+      }));
+      calcularCustoOportunidade();
+    }
+  };
+
+  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setProjetoInfo((prev) => ({
-      ...prev,
-      [name]: name === 'descricao' ? value : Number(value)
-    }));
-  }, []);
-
-  const handleCreditoChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setCreditoInfo((prev) => ({
-      ...prev,
-      [name]: Number(value)
-    }));
-  }, []);
-
-  const handleParcelasChange = useCallback((value: number[]) => {
-    setCreditoInfo((prev) => ({
-      ...prev,
-      quantidadeParcelas: value[0]
-    }));
-  }, []);
+    
+    // Se for o campo de descrição, atualiza diretamente como string
+    if (name === 'descricao') {
+      setProjetoInfo(prev => ({
+        ...prev,
+        [name]: value
+      }));
+      return;
+    }
+    
+    // Para os outros campos, converte para número
+    const novoValor = Number(value);
+    if (!isNaN(novoValor)) {
+      setProjetoInfo(prev => ({
+        ...prev,
+        [name]: novoValor
+      }));
+      calcularCustoOportunidade();
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-slate-900 mb-2 text-center tracking-tight">
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2 text-center tracking-tight">
           Simulador de Investimento
         </h1>
-        <p className="text-slate-600 text-center mb-12 text-lg">
+        <p className="text-slate-600 text-center mb-8 md:mb-12 text-base md:text-lg">
           Análise inteligente para decisões estratégicas
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
           <ProjectInfo
             projetoInfo={projetoInfo}
             handleProjetoChange={handleProjetoChange}
@@ -200,21 +233,17 @@ const CustoOportunidadeCalculadora = () => {
             creditoInfo={creditoInfo}
             handleCreditoChange={handleCreditoChange}
             handleParcelasChange={handleParcelasChange}
-            calcularCustoCredito={calcularCustoCredito}
+            calcularCustoCredito={calcularCustoOportunidade}
             custoCreditoInfo={custoCreditoInfo}
             dadosGraficoPagamento={dadosGraficoPagamento}
+            dadosGrafico={dadosGrafico}
+            custoOportunidade={dadosGrafico.find(
+              dado => dado.ganhoPotencial > dado.custoEmprestimo
+            )}
             formatoMoeda={formatoMoeda}
+            graficoVisivel={graficoVisivel}
           />
         </div>
-
-        {typeof window !== 'undefined' && ( // Isso evita erros de hidratação
-          <OpportunityAnalysis
-            calcularCustoOportunidade={calcularCustoOportunidade}
-            graficoVisivel={graficoVisivel}
-            dadosGrafico={dadosGrafico}
-            formatoMoeda={formatoMoeda}
-          />
-        )}
       </div>
     </div>
   );

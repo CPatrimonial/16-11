@@ -27,16 +27,16 @@ export default function RootLayout({
         <meta name="geo.region" content="BR-SP" />
         <meta name="geo.placename" content="São Paulo" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div suppressHydrationWarning>
+          <div suppressHydrationWarning className="flex flex-col min-h-screen">
             <Navigation />
-            <main className="min-h-screen">{children}</main>
+            <main className="flex-grow pt-16 md:pt-20">{children}</main>
             <Footer />
             <Toaster />
           </div>

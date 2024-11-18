@@ -165,8 +165,8 @@ const CalculadoraAmortizacao = () => {
               <h2 className="text-2xl font-semibold">Cenários de Simulação</h2>
               <Button
                 onClick={adicionarCenario}
-                variant="outline"
-                className="text-white border-white hover:bg-white/10"
+                variant="secondary"
+                className="bg-white text-blue-900 hover:bg-blue-50 border-2 border-white font-semibold"
               >
                 Adicionar Novo Cenário
               </Button>
@@ -381,10 +381,9 @@ const CalculadoraAmortizacao = () => {
                           <td className="p-3">{cenario.nome}</td>
                           <td className="p-3 text-right">
                             R${' '}
-                            {resultados.pagamentoMensal.toLocaleString(
-                              'pt-BR',
-                              { minimumFractionDigits: 2 }
-                            )}
+                            {resultados.pagamentoMensal.toLocaleString('pt-BR', {
+                              minimumFractionDigits: 2,
+                            })}
                           </td>
                           <td className="p-3 text-right">
                             R${' '}
@@ -409,6 +408,27 @@ const CalculadoraAmortizacao = () => {
               </div>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Seção de Consultoria Personalizada */}
+        <div className="mt-12 bg-gradient-to-r from-blue-900 to-blue-800 rounded-lg shadow-xl">
+          <div className="p-8 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Precisa de ajuda para tomar a melhor decisão?
+            </h2>
+            <p className="text-lg text-blue-100 mb-8 max-w-2xl mx-auto">
+              Nossa equipe de especialistas está pronta para analisar seu caso específico 
+              e desenvolver um plano financeiro personalizado para você.
+            </p>
+            <Button
+              onClick={() => window.location.href = '/consultoria'}
+              variant="secondary"
+              size="lg"
+              className="bg-white text-blue-900 hover:bg-blue-50 font-semibold text-lg px-8 py-6"
+            >
+              Agendar Consultoria Personalizada
+            </Button>
+          </div>
         </div>
       </div>
     </div>
