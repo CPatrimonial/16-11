@@ -13,10 +13,7 @@ import {
   ResponsiveContainer, 
   Legend, 
   ReferenceLine,
-  Area,
-  defs,
-  linearGradient,
-  stop
+  Area
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -142,16 +139,6 @@ export function CreditInfo({
                       data={dadosGrafico}
                       margin={{ top: 20, right: 20, left: 0, bottom: 20 }}
                     >
-                      <defs>
-                        <linearGradient id="positiveGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.25}/>
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0.1}/>
-                        </linearGradient>
-                        <linearGradient id="negativeGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#dc2626" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#dc2626" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
                       <XAxis 
                         dataKey="ano" 
@@ -177,7 +164,7 @@ export function CreditInfo({
                           return custoOportunidade > 0 ? data.custoEmprestimo : null;
                         }}
                         stroke="none"
-                        fill="url(#positiveGradient)"
+                        fill="#22c55e"
                         name="custoOportunidadePositivo"
                       />
                       {/* Área vermelha para custo de oportunidade negativo */}
@@ -188,7 +175,7 @@ export function CreditInfo({
                           return custoOportunidade < 0 ? data.custoEmprestimo : null;
                         }}
                         stroke="none"
-                        fill="url(#negativeGradient)"
+                        fill="#dc2626"
                         name="custoOportunidadeNegativo"
                       />
                       <Tooltip
