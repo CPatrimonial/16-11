@@ -153,7 +153,7 @@ export default function ConsultoriaPage() {
               className="premium-button border-white text-white hover:bg-white/10 text-lg h-14 px-8"
               asChild
             >
-              <Link href="https://wa.me/seu-numero">
+              <Link href="https://api.whatsapp.com/send?phone=5516997338791&text=Ol%C3%A1%2C%20quero%20conhecer%20melhor%20a%20Cr%C3%A9dito%20Patrimonial">
                 WhatsApp Corporativo
                 <MessageCircle className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
