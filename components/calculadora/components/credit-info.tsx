@@ -12,6 +12,7 @@ interface CreditInfoProps {
   };
   handleCreditoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleParcelasChange: (value: number[]) => void;
+  calcularCustoCredito: () => void;
   custoCreditoInfo: {
     parcelaMensal: number;
     custoTotal: number;
@@ -29,6 +30,7 @@ export function CreditInfo({
   creditoInfo,
   handleCreditoChange,
   handleParcelasChange,
+  calcularCustoCredito,
   custoCreditoInfo,
   dadosGraficoPagamento,
   formatoMoeda,
