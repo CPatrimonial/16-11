@@ -142,7 +142,7 @@ export default function ConsultoriaPage() {
               className="premium-button bg-white text-blue-900 hover:bg-blue-50 text-lg h-14 px-8"
               asChild
             >
-              <Link href="https://calendly.com/seu-link">
+              <Link href="https://calendly.com/consultoria-creditopatrimonial/consultoria-gratuita">
                 Agendar Consultoria Exclusiva
                 <Calendar className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>

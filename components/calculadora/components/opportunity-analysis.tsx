@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from '@/components/ui/button';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer } from 'recharts';
 
 interface OpportunityAnalysisProps {
   calcularCustoOportunidade: () => void;
@@ -37,16 +37,16 @@ export function OpportunityAnalysis({
     <>
       <Button 
         onClick={calcularCustoOportunidade} 
-        className="mt-8 bg-gradient-to-r from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white font-medium py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
+        className="mt-8 bg-gradient-to-r from-blue-900 to-blue-800 hover:from-blue-800 hover:to-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-lg transition-all duration-300 transform hover:-translate-y-0.5"
       >
         Analisar Custo de Oportunidade
       </Button>
 
       {graficoVisivel && (
-        <div className="mt-8 bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg">
-          <h3 className="text-2xl font-semibold mb-6 text-slate-800">Análise de Custo de Oportunidade</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <LineChart data={dadosGrafico}>
+        <div className="mt-8 bg-white/95 backdrop-blur-sm p-6 rounded-xl shadow-lg">
+          <h3 className="text-xl font-semibold mb-4 text-slate-800">Análise de Custo de Oportunidade</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <ComposedChart data={dadosGrafico}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
               <XAxis dataKey="ano" stroke="#64748b" />
               <YAxis 
@@ -58,19 +58,19 @@ export function OpportunityAnalysis({
               <Tooltip
                 formatter={tooltipFormatter}
                 contentStyle={{
-                  background: 'rgba(255, 255, 255, 0.9)',
+                  background: 'rgba(255, 255, 255, 0.95)',
                   border: 'none',
                   borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
+                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  fontSize: '12px'
                 }}
               />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey="ganhoPotencial" 
-                name="Ganho Potencial" 
-                stroke="#1e293b" 
-                strokeWidth={2}
+              <ReferenceLine
+                y={dadosGrafico[0]?.ganhoPotencial}
+                label="Ganho Potencial"
+                stroke="#1e40af"
+                strokeDasharray="3 3"
               />
               <Line 
                 type="monotone" 
@@ -79,10 +79,10 @@ export function OpportunityAnalysis({
                 stroke="#3b82f6" 
                 strokeWidth={2}
               />
-            </LineChart>
+            </ComposedChart>
           </ResponsiveContainer>
           {custoOportunidade && (
-            <p className="mt-6 text-center text-lg font-semibold text-blue-600">
+            <p className="mt-4 text-center text-sm font-medium text-blue-600">
               Custo de Oportunidade: {formatoMoeda.format(custoOportunidade.ganhoPotencial - custoOportunidade.custoEmprestimo)} 
               no ano {custoOportunidade.ano}
             </p>

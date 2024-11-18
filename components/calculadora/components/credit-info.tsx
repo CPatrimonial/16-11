@@ -2,7 +2,6 @@
 
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -13,7 +12,6 @@ interface CreditInfoProps {
   };
   handleCreditoChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleParcelasChange: (value: number[]) => void;
-  calcularCustoCredito: () => void;
   custoCreditoInfo: {
     parcelaMensal: number;
     custoTotal: number;
@@ -31,7 +29,6 @@ export function CreditInfo({
   creditoInfo,
   handleCreditoChange,
   handleParcelasChange,
-  calcularCustoCredito,
   custoCreditoInfo,
   dadosGraficoPagamento,
   formatoMoeda,
@@ -42,69 +39,103 @@ export function CreditInfo({
   };
 
   return (
-    <Card className="bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-      <CardHeader className="bg-gradient-to-r from-slate-900 to-slate-800 text-white py-6 px-8">
+    <Card className="bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
+      <CardHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-6 px-8">
         <h2 className="text-2xl font-semibold tracking-tight">Simulação de Crédito</h2>
       </CardHeader>
       <CardContent className="p-8">
-        <Input
-          name="taxaJurosMensal"
-          type="number"
-          placeholder="Taxa de Juros Mensal (%)"
-          className="mb-4 transition-all duration-300 focus:ring-2 focus:ring-blue-500"
-          onChange={handleCreditoChange}
-          step="0.01"
-        />
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-slate-700 mb-2">
-            Prazo: {creditoInfo.quantidadeParcelas} meses
-          </label>
-          <Slider
-            min={36}
-            max={240}
-            step={12}
-            value={[creditoInfo.quantidadeParcelas]}
-            onValueChange={handleParcelasChange}
-            className="my-4"
-          />
+        <div className="grid grid-cols-2 gap-6 mb-8">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Taxa de Juros (a.m.)
+            </label>
+            <div className="relative">
+              <Input
+                name="taxaJurosMensal"
+                type="number"
+                placeholder="Taxa de Juros a.m."
+                className="transition-all duration-300 focus:ring-2 focus:ring-blue-500 pr-8 bg-white/50 hover:bg-white"
+                onChange={handleCreditoChange}
+                step="0.01"
+                value={creditoInfo.taxaJurosMensal}
+              />
+              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500">%</span>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 mb-2">
+              Prazo: {creditoInfo.quantidadeParcelas} meses
+            </label>
+            <div className="flex items-center h-[40px] px-2">
+              <Slider
+                min={36}
+                max={240}
+                step={12}
+                value={[creditoInfo.quantidadeParcelas]}
+                onValueChange={handleParcelasChange}
+                className="cursor-pointer"
+              />
+            </div>
+          </div>
         </div>
-        
-        <Button
-          onClick={calcularCustoCredito}
-          className="w-full bg-gradient-to-r from-slate-800 to-slate-700 hover:from-slate-700 hover:to-slate-600 text-white transition-all duration-300"
-        >
-          Calcular Simulação
-        </Button>
 
         {custoCreditoInfo && (
-          <div className="mt-6 p-6 bg-gradient-to-br from-slate-50 to-white rounded-lg shadow-sm">
-            <p className="text-lg font-semibold text-slate-800 mb-2">
-              Parcela Mensal: {formatoMoeda.format(custoCreditoInfo.parcelaMensal)}
-            </p>
-            <p className="text-lg font-semibold text-slate-800 mb-2">
-              Custo Total: {formatoMoeda.format(custoCreditoInfo.custoTotal)}
-            </p>
-            <p className="text-lg font-semibold text-blue-600">
-              Total de Juros: {formatoMoeda.format(custoCreditoInfo.jurosTotal)}
-            </p>
+          <div className="mb-8 p-6 bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl shadow-sm">
+            <div className="grid grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <div className="p-4 bg-white rounded-lg shadow-sm">
+                  <p className="text-sm font-medium text-blue-600 mb-1">Custo Total</p>
+                  <p className="text-lg font-semibold text-slate-800">
+                    {formatoMoeda.format(custoCreditoInfo.custoTotal)}
+                  </p>
+                </div>
+                <div className="p-4 bg-white rounded-lg shadow-sm">
+                  <p className="text-sm font-medium text-blue-600 mb-1">Total de Juros</p>
+                  <p className="text-lg font-semibold text-blue-800">
+                    {formatoMoeda.format(custoCreditoInfo.jurosTotal)}
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-col items-end justify-center p-4 bg-white rounded-lg shadow-sm">
+                <p className="text-sm font-medium text-blue-600 mb-1">Parcela Mensal</p>
+                <p className="text-3xl font-bold bg-gradient-to-r from-blue-900 to-blue-800 bg-clip-text text-transparent">
+                  {formatoMoeda.format(custoCreditoInfo.parcelaMensal)}
+                </p>
+                <div className="mt-3 text-right">
+                  <p className="text-sm font-medium text-blue-600">Comprovação de Renda</p>
+                  <p className="text-lg font-semibold bg-gradient-to-r from-blue-900 to-blue-800 bg-clip-text text-transparent">
+                    {formatoMoeda.format((custoCreditoInfo.parcelaMensal * 10) / 3)}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
         {dadosGraficoPagamento.length > 0 && (
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4 text-slate-800">Evolução do Saldo Devedor</h3>
-            <ResponsiveContainer width="100%" height={200}>
-              <AreaChart data={dadosGraficoPagamento}>
+          <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-slate-50 rounded-xl shadow-sm">
+            <h3 className="text-lg font-semibold mb-6 text-slate-800">Evolução do Saldo Devedor</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart 
+                data={dadosGraficoPagamento}
+                margin={{ top: 10, right: 30, left: 30, bottom: 5 }}
+              >
                 <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                <XAxis dataKey="mes" stroke="#64748b" />
+                <XAxis 
+                  dataKey="mes" 
+                  stroke="#64748b"
+                  tickMargin={10}
+                />
                 <YAxis 
                   tickFormatter={formatValue} 
-                  stroke="#64748b" 
+                  stroke="#64748b"
+                  width={100}
+                  tickMargin={5}
                 />
                 <Tooltip
                   formatter={(value: number | string) => [formatValue(value), 'Saldo Devedor']}
                   contentStyle={{
-                    background: 'rgba(255, 255, 255, 0.9)',
+                    background: 'rgba(255, 255, 255, 0.95)',
                     border: 'none',
                     borderRadius: '8px',
                     boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
@@ -113,13 +144,13 @@ export function CreditInfo({
                 <Area
                   type="monotone"
                   dataKey="saldoDevedor"
-                  stroke="#1e293b"
+                  stroke="#1e40af"
                   fill="url(#colorGradient)"
                 />
                 <defs>
                   <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1e293b" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#1e293b" stopOpacity={0} />
+                    <stop offset="5%" stopColor="#1e40af" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#1e40af" stopOpacity={0} />
                   </linearGradient>
                 </defs>
               </AreaChart>
