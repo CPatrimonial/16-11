@@ -13,7 +13,7 @@ import {
   ResponsiveContainer, 
   Legend, 
   ReferenceLine,
-  Area
+  AreaChart as Area
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';

@@ -3,6 +3,7 @@
 import { Card } from "@/components/ui/card";
 import { Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Article } from "./types";
 
 interface ArticleCardProps {
@@ -12,11 +13,12 @@ interface ArticleCardProps {
 export function ArticleCard({ article }: ArticleCardProps) {
   return (
     <Card className="group overflow-hidden bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
-      <div className="aspect-video w-full overflow-hidden">
-        <img
+      <div className="aspect-video w-full overflow-hidden relative">
+        <Image
           src={article.imageUrl}
           alt={article.title}
-          className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
+          fill
+          className="object-cover transform group-hover:scale-105 transition-transform duration-500"
         />
       </div>
       <div className="p-8">

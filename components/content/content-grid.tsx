@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { ContentCategory } from "./types";
 
 interface ContentGridProps {
@@ -39,11 +40,12 @@ export default function ContentGrid({ categories, searchQuery }: ContentGridProp
           <div className="grid md:grid-cols-2 gap-12">
             {category.articles.map((article) => (
               <Card key={article.id} className="premium-card group overflow-hidden">
-                <div className="aspect-video w-full overflow-hidden">
-                  <img
+                <div className="aspect-video w-full overflow-hidden relative">
+                  <Image
                     src={article.imageUrl}
                     alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>
                 <div className="p-8">
