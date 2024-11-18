@@ -11,9 +11,7 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  Legend, 
-  ReferenceLine,
-  Area
+  Legend
 } from 'recharts';
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
@@ -149,10 +147,8 @@ export function CreditInfo({
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <ReferenceLine x="0" stroke="red" />
                       <Line type="monotone" dataKey="custoEmprestimo" stroke="#8884d8" activeDot={{ r: 8 }} />
                       <Line type="monotone" dataKey="ganhoPotencial" stroke="#82ca9d" />
-                      <Area type="monotone" dataKey="custoEmprestimo" stroke="#8884d8" fillOpacity={1} fill="#ccc" />
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
