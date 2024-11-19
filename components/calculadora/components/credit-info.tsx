@@ -56,7 +56,8 @@ export function CreditInfo({
 }: CreditInfoProps) {
   // Efeito para recalcular quando houver mudanças nos valores
   useEffect(() => {
-    if (custoCreditoInfo?.parcelaMensal > 0) {
+    const parcelaMensal = custoCreditoInfo?.parcelaMensal;
+    if (parcelaMensal && parcelaMensal > 0) {
       calcularCustoCredito();
     }
   }, [custoCreditoInfo?.parcelaMensal, calcularCustoCredito]);
@@ -108,19 +109,19 @@ export function CreditInfo({
               <div className="text-center p-4 bg-white rounded-lg shadow-sm">
                 <span className="block text-xs font-medium text-blue-600">Parcela Mensal</span>
                 <span className="text-base font-bold text-slate-800">
-                  {formatoMoeda.format(custoCreditoInfo.parcelaMensal)}
+                  {custoCreditoInfo?.parcelaMensal ? formatoMoeda.format(custoCreditoInfo.parcelaMensal) : 'R$ 0'}
                 </span>
               </div>
               <div className="text-center p-4 bg-white rounded-lg shadow-sm">
                 <span className="block text-xs font-medium text-blue-600">Custo Total</span>
                 <span className="text-base font-bold text-slate-800">
-                  {formatoMoeda.format(custoCreditoInfo.custoTotal)}
+                  {custoCreditoInfo?.custoTotal ? formatoMoeda.format(custoCreditoInfo.custoTotal) : 'R$ 0'}
                 </span>
               </div>
               <div className="text-center p-4 bg-white rounded-lg shadow-sm">
                 <span className="block text-xs font-medium text-blue-600">Total em Juros</span>
                 <span className="text-base font-bold text-slate-800">
-                  {formatoMoeda.format(custoCreditoInfo.jurosTotal)}
+                  {custoCreditoInfo?.jurosTotal ? formatoMoeda.format(custoCreditoInfo.jurosTotal) : 'R$ 0'}
                 </span>
               </div>
             </div>
@@ -129,81 +130,97 @@ export function CreditInfo({
               <div className="p-4 bg-white rounded-lg shadow-sm">
                 <p className="text-sm font-medium text-blue-600 mb-1">Parcela Mensal</p>
                 <p className="text-xl sm:text-2xl font-bold text-blue-900">
-                  {formatoMoeda.format(custoCreditoInfo.parcelaMensal)}
+                  {custoCreditoInfo?.parcelaMensal ? formatoMoeda.format(custoCreditoInfo.parcelaMensal) : 'R$ 0'}
                 </p>
               </div>
               <div className="p-4 bg-white rounded-lg shadow-sm">
                 <p className="text-sm font-medium text-blue-600 mb-1">Comprovação de Renda</p>
                 <p className="text-xl sm:text-2xl font-bold text-blue-900">
-                  {formatoMoeda.format((custoCreditoInfo.parcelaMensal * 10) / 3)}
+                  {custoCreditoInfo?.parcelaMensal ? formatoMoeda.format((custoCreditoInfo.parcelaMensal * 10) / 3) : 'R$ 0'}
                 </p>
               </div>
             </div>
 
-            {dadosGrafico.length > 0 && (
-              <div className="mt-6 sm:mt-8">
-                <h3 className="text-lg font-semibold text-slate-800 mb-4">Análise de Custo de Oportunidade</h3>
-                <div className="w-full h-[300px] sm:h-[400px] md:h-[500px] bg-white/50 p-2 sm:p-4 rounded-xl">
+            {graficoVisivel && dadosGrafico.length > 0 && (
+              <div className="space-y-6">
+                <div className="h-[300px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart
-                      data={dadosGrafico}
-                      margin={{
-                        top: 10,
-                        right: 30,
-                        left: 0,
-                        bottom: 0,
-                      }}
-                    >
-                      <defs>
-                        <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8}/>
-                          <stop offset="95%" stopColor="#8884d8" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
+                    <ComposedChart data={dadosGrafico}>
                       <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="mes" />
-                      <YAxis />
-                      <Tooltip />
+                      <XAxis 
+                        dataKey="ano" 
+                        label={{ value: 'Anos', position: 'insideBottom', offset: -5 }}
+                      />
+                      <YAxis 
+                        label={{ 
+                          value: 'Valor (R$)', 
+                          angle: -90, 
+                          position: 'insideLeft',
+                          offset: 10
+                        }}
+                      />
+                      <Tooltip 
+                        formatter={(value: number) => formatoMoeda.format(value)}
+                        labelFormatter={(label) => `Ano ${label}`}
+                      />
                       <Legend />
-                      <Line type="monotone" dataKey="custoEmprestimo" stroke="#8884d8" activeDot={{ r: 8 }} />
-                      <Line type="monotone" dataKey="ganhoPotencial" stroke="#82ca9d" />
+                      <Area
+                        type="monotone"
+                        dataKey="ganhoPotencial"
+                        name="Ganho Potencial"
+                        fill="#4ade80"
+                        stroke="#22c55e"
+                        fillOpacity={0.3}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="custoEmprestimo"
+                        name="Custo do Empréstimo"
+                        stroke="#ef4444"
+                        strokeWidth={2}
+                      />
+                      {custoOportunidade && (
+                        <ReferenceLine
+                          x={custoOportunidade.ano}
+                          stroke="#22c55e"
+                          label={{
+                            value: `Ponto de Equilíbrio: Ano ${custoOportunidade.ano}`,
+                            fill: '#22c55e',
+                            fontSize: 12
+                          }}
+                        />
+                      )}
                     </ComposedChart>
                   </ResponsiveContainer>
                 </div>
-                {custoOportunidade && (
-                  <>
-                    <div className="mt-4 p-4 bg-blue-50 rounded-lg">
-                      <p className="text-center text-sm font-medium text-blue-900">
-                        {(() => {
-                          const breakEvenIndex = dadosGrafico.findIndex((data, index) => {
-                            if (index === 0) return false;
-                            const custoAtual = dadosGrafico[0].ganhoPotencial - data.custoEmprestimo;
-                            const custoAnterior = dadosGrafico[0].ganhoPotencial - dadosGrafico[index - 1].custoEmprestimo;
-                            return custoAtual <= 0 && custoAnterior > 0;
-                          });
 
-                          if (breakEvenIndex > 0) {
-                            return "Quitando o empréstimo dentro da área verde do gráfico, seu custo de oportunidade é positivo!";
-                          }
-                          
-                          return "Seu custo de oportunidade permanece positivo durante todo o período!";
-                        })()}
-                      </p>
-                    </div>
-                    <div className="mt-4 flex items-center justify-center gap-4">
-                      <p className="text-sm font-medium text-gray-700">
-                        Quer saber como quitar no prazo?
-                      </p>
-                      <Button
-                        onClick={() => window.location.href = '/plano-financeiro'}
-                        variant="default"
-                        className="bg-blue-600 hover:bg-blue-700 text-white"
-                      >
-                        Ver Plano Financeiro
-                      </Button>
-                    </div>
-                  </>
-                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-4 bg-white rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-700 mb-2">
+                      Análise do Investimento
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      {custoOportunidade ? (
+                        `O investimento se paga em ${custoOportunidade.ano} anos, quando os ganhos superam os custos do financiamento.`
+                      ) : (
+                        'Os ganhos não superam os custos do financiamento no período analisado.'
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-white rounded-lg shadow-sm">
+                    <h3 className="text-sm font-medium text-slate-700 mb-2">
+                      Recomendação
+                    </h3>
+                    <p className="text-sm text-slate-600">
+                      {custoOportunidade ? (
+                        `Recomendamos prosseguir com o investimento, pois ele se mostra viável a partir do ${custoOportunidade.ano}º ano.`
+                      ) : (
+                        'Sugerimos reavaliar as condições do financiamento ou buscar alternativas de investimento.'
+                      )}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
