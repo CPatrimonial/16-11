@@ -5,12 +5,14 @@ import { ThemeProvider } from '@/components/theme-provider';
 import Navigation from '@/components/navigation';
 import Footer from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Crédito com Garantia de Imóvel | Sua Empresa',
-  description: 'Especialistas em viabilizar projetos importantes através do crédito com garantia de imóvel. Taxas a partir de 0,99% ao mês.',
+  title: 'Crédito com Garantia de Imóvel | Crédito Patrimonial',
+  description: 'Crédito Patrimonial - Especialista em crédito com garantia de imóvel em Ribeirão Preto - SP. Oferecemos as melhores taxas e condições para você.',
   keywords: 'crédito, imóvel, financiamento, garantia',
 }
 
@@ -41,6 +43,8 @@ export default function RootLayout({
             <Toaster />
           </div>
         </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

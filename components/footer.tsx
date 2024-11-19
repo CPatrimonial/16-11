@@ -74,7 +74,10 @@ const Footer = () => {
         </div>
         
         <div className="border-t border-blue-900 mt-8 pt-8 text-center text-sm text-gray-300">
-          <p> {new Date().getFullYear()} Crédito Patrimonial. Todos os direitos reservados.</p>
+          <div className="text-sm text-slate-600">
+            <p> {new Date().getFullYear()} Crédito Patrimonial. Todos os direitos reservados.</p>
+            <p>Ribeirão Preto - SP</p>
+          </div>
         </div>
       </div>
     </footer>
