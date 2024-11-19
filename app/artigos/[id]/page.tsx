@@ -1,4 +1,4 @@
-import type { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 // Lista temporária de artigos
@@ -421,17 +421,12 @@ const artigos = [
   }
 ];
 
-// Defina o tipo usando a tipagem oficial do Next.js
-type Props = {
-  params: { id: string }
-  searchParams: { [key: string]: string | string[] | undefined }
-}
-
 // Metadata generation for SEO
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata
-): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
   const artigo = artigos.find(a => a.id === params.id);
   
   if (!artigo) {
