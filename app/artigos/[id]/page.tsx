@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata, ResolvingMetadata } from 'next';
 import { notFound } from 'next/navigation';
 
 // Lista temporária de artigos
@@ -421,12 +421,18 @@ const artigos = [
   }
 ];
 
-// Metadata generation for SEO
-export async function generateMetadata({
-  params,
-}: {
+// Primeiro, vamos definir o tipo para os parâmetros da página
+type GenerateMetadataParams = {
   params: { id: string };
-}): Promise<Metadata> {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+// Agora vamos usar esse tipo na função generateMetadata
+export async function generateMetadata(
+  props: GenerateMetadataParams,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { params } = props;
   const artigo = artigos.find(a => a.id === params.id);
   
   if (!artigo) {
