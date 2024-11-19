@@ -1,6 +1,5 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from 'react-markdown';
 
 // Lista temporária de artigos
 const artigos = [
@@ -422,13 +421,6 @@ const artigos = [
   }
 ];
 
-// Primeiro, defina a interface Props
-interface Props {
-  params: {
-    id: string;
-  }
-}
-
 // Metadata generation for SEO
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const artigo = artigos.find(a => a.id === params.id);
@@ -477,7 +469,9 @@ export default function ArtigoPage({
       <article className="prose lg:prose-xl mx-auto">
         <h1 className="text-3xl font-bold mb-4">{artigo.titulo}</h1>
         <div className="bg-white p-6 rounded-lg shadow-sm">
-          <ReactMarkdown>{artigo.conteudo}</ReactMarkdown>
+          <div className="whitespace-pre-wrap markdown-content">
+            {artigo.conteudo}
+          </div>
         </div>
       </article>
     </div>
