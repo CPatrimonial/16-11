@@ -38,12 +38,7 @@ export function ProjectInfo({
     
     // Se for o campo de descrição, passa o valor direto
     if (name === 'descricao') {
-      handleProjetoChange({
-        target: {
-          name,
-          value
-        }
-      } as React.ChangeEvent<HTMLInputElement>);
+      handleProjetoChange(e);
       return;
     }
     
@@ -55,7 +50,7 @@ export function ProjectInfo({
         name,
         value: numeroLimpo
       }
-    } as React.ChangeEvent<HTMLInputElement>;
+    } as React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
     
     handleProjetoChange(novoEvento);
   };
