@@ -187,7 +187,7 @@ const CustoOportunidadeCalculadora = () => {
     }
   };
 
-  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     // Se for o campo de descrição, atualiza diretamente como string
@@ -200,14 +200,12 @@ const CustoOportunidadeCalculadora = () => {
     }
     
     // Para os outros campos, converte para número
-    const novoValor = Number(value);
-    if (!isNaN(novoValor)) {
-      setProjetoInfo(prev => ({
-        ...prev,
-        [name]: novoValor
-      }));
-      calcularCustoOportunidade();
-    }
+    const novoValor = Number(value.replace(/\D/g, '')) || 0;
+    setProjetoInfo(prev => ({
+      ...prev,
+      [name]: novoValor
+    }));
+    calcularCustoOportunidade();
   };
 
   return (
