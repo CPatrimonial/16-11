@@ -34,10 +34,12 @@ interface CreditInfoProps {
   handleCreditoChange: (field: keyof CreditoInfo, value: string) => void;
   handleParcelasChange: (value: string) => void;
   calcularCustoCredito: () => void;
-  custoCreditoInfo: CustoCreditoInfo;
+  custoCreditoInfo: CustoCreditoInfo | null;
+  dadosGraficoPagamento: Array<any>;
   dadosGrafico: Array<any>;
   custoOportunidade: any;
   formatoMoeda: Intl.NumberFormat;
+  graficoVisivel: boolean;
 }
 
 export function CreditInfo({
@@ -46,23 +48,25 @@ export function CreditInfo({
   handleParcelasChange,
   calcularCustoCredito,
   custoCreditoInfo,
+  dadosGraficoPagamento,
   dadosGrafico,
   custoOportunidade,
   formatoMoeda,
+  graficoVisivel
 }: CreditInfoProps) {
   // Efeito para recalcular quando houver mudanças nos valores
   useEffect(() => {
-    if (custoCreditoInfo && custoCreditoInfo.parcelaMensal > 0) {
+    if (custoCreditoInfo?.parcelaMensal > 0) {
       calcularCustoCredito();
     }
-  }, [creditoInfo, custoCreditoInfo, calcularCustoCredito]);
+  }, [custoCreditoInfo?.parcelaMensal, calcularCustoCredito]);
 
   return (
     <Card className="bg-white/95 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 w-full max-w-full overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-4 px-4">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold tracking-tight">Simulação de Crédito</h2>
+      <CardHeader className="bg-gradient-to-r from-blue-900 to-blue-800 text-white py-4 md:py-6 px-4 md:px-8">
+        <h2 className="text-xl md:text-2xl font-semibold tracking-tight">Simulação de Crédito</h2>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 md:p-8">
+      <CardContent className="p-4 md:p-8">
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="flex-1">
             <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -100,18 +104,24 @@ export function CreditInfo({
 
         {custoCreditoInfo && (
           <div className="space-y-4 mb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="p-4 bg-white rounded-lg shadow-sm">
-                <p className="text-sm font-medium text-blue-600 mb-1">Custo Total</p>
-                <p className="text-lg sm:text-xl font-semibold text-slate-800">
-                  {formatoMoeda.format(custoCreditoInfo.custoTotal)}
-                </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+              <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                <span className="block text-xs font-medium text-blue-600">Parcela Mensal</span>
+                <span className="text-base font-bold text-slate-800">
+                  {formatoMoeda.format(custoCreditoInfo.parcelaMensal)}
+                </span>
               </div>
-              <div className="p-4 bg-white rounded-lg shadow-sm">
-                <p className="text-sm font-medium text-blue-600 mb-1">Total de Juros</p>
-                <p className="text-lg sm:text-xl font-semibold text-blue-800">
+              <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                <span className="block text-xs font-medium text-blue-600">Custo Total</span>
+                <span className="text-base font-bold text-slate-800">
+                  {formatoMoeda.format(custoCreditoInfo.custoTotal)}
+                </span>
+              </div>
+              <div className="text-center p-4 bg-white rounded-lg shadow-sm">
+                <span className="block text-xs font-medium text-blue-600">Total em Juros</span>
+                <span className="text-base font-bold text-slate-800">
                   {formatoMoeda.format(custoCreditoInfo.jurosTotal)}
-                </p>
+                </span>
               </div>
             </div>
             

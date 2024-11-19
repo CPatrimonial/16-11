@@ -207,7 +207,7 @@ const CustoOportunidadeCalculadora = () => {
       [name]: novoValor
     }));
     calcularCustoOportunidade();
-  }, []);
+  }, [calcularCustoOportunidade]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 md:p-8">
