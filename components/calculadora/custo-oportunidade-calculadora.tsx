@@ -187,16 +187,27 @@ const CustoOportunidadeCalculadora = () => {
     }
   };
 
-  const handleProjetoChange = (name: string, value: string | number) => {
+  // Função para lidar com mudanças nos campos do projeto
+  const handleProjetoChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    // Se for o campo de descrição, atualiza diretamente como string
+    if (name === 'descricao') {
+      setProjetoInfo(prev => ({
+        ...prev,
+        [name]: value
+      }));
+      return;
+    }
+    
+    // Para os outros campos, converte para número
+    const novoValor = Number(value.replace(/\D/g, '')) || 0;
     setProjetoInfo(prev => ({
       ...prev,
-      [name]: value
+      [name]: novoValor
     }));
-    
-    if (name !== 'descricao') {
-      calcularCustoOportunidade();
-    }
-  };
+    calcularCustoOportunidade();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-6 md:p-8">

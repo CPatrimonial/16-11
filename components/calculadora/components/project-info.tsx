@@ -12,7 +12,7 @@ interface ProjectInfoProps {
     economiaGerada: number;
     investimentoViabilizacao: number;
   };
-  handleProjetoChange: (name: string, value: string | number) => void;
+  handleProjetoChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   ganhoPotencial: number;
   expectativaLucro: number;
   formatoMoeda: Intl.NumberFormat;
@@ -34,19 +34,7 @@ export function ProjectInfo({
 
   // Função para remover a formatação e enviar apenas o número
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    
-    // Se for o campo de descrição, passa o valor direto
-    if (name === 'descricao') {
-      handleProjetoChange(name, value);
-      return;
-    }
-    
-    // Para campos numéricos, remove caracteres não numéricos
-    const numeroLimpo = value.replace(/\D/g, '');
-    const valorNumerico = parseInt(numeroLimpo) || 0;
-    
-    handleProjetoChange(name, valorNumerico);
+    handleProjetoChange(e);
   };
 
   return (
