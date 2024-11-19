@@ -187,25 +187,15 @@ const CustoOportunidadeCalculadora = () => {
     }
   };
 
-  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    
-    // Se for o campo de descrição, atualiza diretamente como string
-    if (name === 'descricao') {
-      setProjetoInfo(prev => ({
-        ...prev,
-        [name]: value
-      }));
-      return;
-    }
-    
-    // Para os outros campos, converte para número
-    const novoValor = Number(value.replace(/\D/g, '')) || 0;
+  const handleProjetoChange = (name: string, value: string | number) => {
     setProjetoInfo(prev => ({
       ...prev,
-      [name]: novoValor
+      [name]: value
     }));
-    calcularCustoOportunidade();
+    
+    if (name !== 'descricao') {
+      calcularCustoOportunidade();
+    }
   };
 
   return (
