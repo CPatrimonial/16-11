@@ -421,8 +421,15 @@ const artigos = [
   }
 ];
 
+// Defina a interface Props
+export interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
 // Metadata generation for SEO
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const artigo = artigos.find(a => a.id === params.id);
   
   if (!artigo) {
@@ -453,11 +460,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ArtigoPage({
-  params,
-}: {
-  params: { id: string }
-}) {
+export default function ArtigoPage({ params }: PageProps) {
   const artigo = artigos.find(a => a.id === params.id);
 
   if (!artigo) {
