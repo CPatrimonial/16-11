@@ -47,7 +47,6 @@ const Footer = () => {
                 </a>
               </div>
               <div>
-                <p className="text-sm font-medium text-gray-300">Localização:</p>
                 <p className="text-sm text-gray-300">Ribeirão Preto - SP</p>
               </div>
             </div>
@@ -58,23 +57,18 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/calculadora" className="text-sm text-gray-300 hover:text-white">
-                  Custo de Oportunidade
-                </Link>
-              </li>
-              <li>
                 <Link href="/sobre" className="text-sm text-gray-300 hover:text-white">
                   Sobre Nós
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-sm text-gray-300 hover:text-white">
-                  Blog
+                <Link href="/privacidade" className="text-sm text-gray-300 hover:text-white">
+                  Política de Privacidade
                 </Link>
               </li>
               <li>
-                <Link href="/faq" className="text-sm text-gray-300 hover:text-white">
-                  FAQ
+                <Link href="/termos" className="text-sm text-gray-300 hover:text-white">
+                  Termos de Uso
                 </Link>
               </li>
             </ul>
