@@ -16,13 +16,10 @@ const Footer = () => {
               Ajudando clientes a conseguirem as melhores ofertas de home equity desde 2021.
             </p>
             <div className="flex space-x-4">
-              <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+              <Link href="https://www.linkedin.com/company/cr%C3%A9dito-patrimonial/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
                 <Linkedin className="h-5 w-5" />
               </Link>
-              <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
-                <Facebook className="h-5 w-5" />
-              </Link>
-              <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
+              <Link href="https://www.instagram.com/creditopatrimonial/" target="_blank" rel="noopener noreferrer" className="text-gray-300 hover:text-white">
                 <Instagram className="h-5 w-5" />
               </Link>
             </div>
