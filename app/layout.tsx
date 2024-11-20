@@ -11,9 +11,35 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Crédito com Garantia de Imóvel | Crédito Patrimonial',
-  description: 'Crédito Patrimonial - Especialista em crédito com garantia de imóvel em Ribeirão Preto - SP. Oferecemos as melhores taxas e condições para você.',
-  keywords: 'crédito, imóvel, financiamento, garantia',
+  title: 'Crédito Patrimonial | Especialista em Crédito com Garantia de Imóvel',
+  description: 'Crédito Patrimonial - Líder em crédito com garantia de imóvel em Ribeirão Preto - SP. Taxas a partir de 0,99% ao mês, aprovação em 24h e atendimento personalizado.',
+  keywords: 'crédito com garantia, empréstimo com garantia de imóvel, financiamento imobiliário, crédito patrimonial, home equity, refinanciamento, ribeirão preto',
+  authors: [{ name: 'Crédito Patrimonial' }],
+  creator: 'Crédito Patrimonial',
+  publisher: 'Crédito Patrimonial',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({
