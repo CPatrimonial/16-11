@@ -5,6 +5,8 @@ export interface Article {
   readTime: string;
   category: string;
   imageUrl: string;
+  author: string;
+  datePublished: string;
 }
 
 export interface ContentCategory {

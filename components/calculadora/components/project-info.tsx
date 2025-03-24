@@ -61,11 +61,11 @@ export function ProjectInfo({
         <div className="mb-6 md:mb-8">
           <label className="block text-sm font-medium text-slate-700 mb-2">Descrição do Projeto</label>
           <textarea
+            id="input-descricao"
             name="descricao"
-            className="w-full h-24 md:h-32 p-3 md:p-4 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 bg-white/50"
-            placeholder="Descreva seu projeto considerando todos os aspectos que o tornam único e valioso."
-            onChange={handleInputChange}
             value={projetoInfo.descricao}
+            onChange={handleInputChange}
+            className="mt-1 block w-full rounded-md border-slate-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
           <p className="text-xs md:text-sm text-slate-500 mt-2 italic">
             Detalhe os benefícios e o impacto esperado em seu patrimônio.

@@ -5,6 +5,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CategorySection } from "@/components/content/category-section";
 import { ContentCategory } from "@/components/content/types";
+import Head from 'next/head';
 
 export default function ConteudoPatrimonialPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +23,8 @@ export default function ConteudoPatrimonialPage() {
           readTime: "8 min",
           category: "Gestão Estratégica",
           imageUrl: "https://images.unsplash.com/photo-1554774853-719586f82d77?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
         {
           id: 2,
@@ -30,6 +33,8 @@ export default function ConteudoPatrimonialPage() {
           readTime: "12 min",
           category: "Gestão Estratégica",
           imageUrl: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
       ],
     },
@@ -45,6 +50,8 @@ export default function ConteudoPatrimonialPage() {
           readTime: "10 min",
           category: "Projetos",
           imageUrl: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
         {
           id: 4,
@@ -53,6 +60,8 @@ export default function ConteudoPatrimonialPage() {
           readTime: "15 min",
           category: "Projetos",
           imageUrl: "https://images.unsplash.com/photo-1551836022-4c4c79ecde51?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
       ],
     },
@@ -68,6 +77,8 @@ export default function ConteudoPatrimonialPage() {
           readTime: "20 min",
           category: "Análise",
           imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
         {
           id: 6,
@@ -76,12 +87,47 @@ export default function ConteudoPatrimonialPage() {
           readTime: "18 min",
           category: "Análise",
           imageUrl: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3",
+          author: "Equipe Crédito Patrimonial",
+          datePublished: "2023-11-16",
         },
       ],
     },
   ];
 
+  const schemaData = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "Centro de Conteúdo Patrimonial",
+    "description": "Artigos e guias especializados sobre gestão patrimonial e estratégias financeiras",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Crédito Patrimonial",
+      "url": "https://www.creditopatrimonial.com.br"
+    },
+    "mainEntity": {
+      "@type": "ItemList",
+      "itemListElement": categories.flatMap((category, categoryIndex) =>
+        category.articles.map((article, articleIndex) => ({
+          "@type": "ListItem",
+          "position": categoryIndex * 100 + articleIndex + 1,
+          "item": {
+            "@type": "Article",
+            "headline": article.title,
+            "description": article.description,
+            "author": {
+              "@type": "Organization",
+              "name": article.author
+            },
+            "datePublished": article.datePublished,
+            "image": article.imageUrl
+          }
+        }))
+      )
+    }
+  };
+
   const filteredCategories = categories.map(category => ({
+
     ...category,
     articles: category.articles.filter(article =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -91,46 +137,45 @@ export default function ConteudoPatrimonialPage() {
   })).filter(category => category.articles.length > 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 pt-32">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-            Centro de Conhecimento
-          </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-12">
-            Explore nossa biblioteca de conteúdo especializado sobre gestão patrimonial e estratégias financeiras avançadas
+    <>
+      <Head>
+        <title>Centro de Conteúdo Patrimonial</title>
+        <meta name="description" content="Artigos e guias especializados sobre gestão patrimonial e estratégias financeiras" />
+      </Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+      />
+      
+      <main className="container mx-auto px-4 py-8">
+        <header className="mb-12">
+          <h1 className="text-4xl font-bold mb-4">Centro de Conteúdo Patrimonial</h1>
+          <p className="text-xl text-muted-foreground mb-8">
+            Explore nossos artigos e guias especializados sobre gestão patrimonial e estratégias financeiras
           </p>
-          <div className="relative max-w-2xl mx-auto">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-slate-400" />
-            </div>
+          
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
             <Input
-              type="text"
-              placeholder="Pesquisar conteúdo..."
+              type="search"
+              placeholder="Buscar conteúdo..."
+              className="pl-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-3 text-lg rounded-full border-slate-200 focus:border-blue-500 focus:ring-blue-500 transition-all duration-300"
             />
           </div>
-        </div>
+        </header>
 
-        <div className="space-y-24">
+        <nav aria-label="Categorias de conteúdo">
           {filteredCategories.map((category) => (
-            <CategorySection key={category.id} category={category} />
+            <CategorySection
+              key={category.id}
+              category={category}
+              searchQuery={searchQuery}
+            />
           ))}
-
-          {filteredCategories.length === 0 && (
-            <div className="text-center py-16">
-              <h3 className="text-2xl font-semibold text-slate-900 mb-4">
-                Nenhum conteúdo encontrado
-              </h3>
-              <p className="text-xl text-slate-600">
-                Ajuste sua pesquisa ou explore outras categorias do nosso acervo.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+        </nav>
+      </main>
+    </>
   );
 }

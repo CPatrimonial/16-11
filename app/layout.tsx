@@ -7,6 +7,7 @@ import Footer from '@/components/footer';
 import { Toaster } from "@/components/ui/toaster";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -54,6 +55,12 @@ export default function RootLayout({
         <meta name="author" content="Crédito Patrimonial" />
         <meta name="geo.region" content="BR-SP" />
         <meta name="geo.placename" content="São Paulo" />
+        <Script 
+          async 
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6394806030005416"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
       </head>
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider
