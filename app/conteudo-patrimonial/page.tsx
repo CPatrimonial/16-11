@@ -127,13 +127,15 @@ export default function ConteudoPatrimonialPage() {
   };
 
   const filteredCategories = categories.map(category => ({
-
-    ...category,
+    id: category.id,
+    title: category.title,
+    description: category.description,
     articles: category.articles.filter(article =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       article.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
       category.title.toLowerCase().includes(searchQuery.toLowerCase())
     ),
+    search: searchQuery,
   })).filter(category => category.articles.length > 0);
 
   return (
