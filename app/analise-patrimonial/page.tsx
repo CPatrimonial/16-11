@@ -21,12 +21,46 @@ import {
   Area
 } from 'recharts';
 
+// Interface para a estrutura do projeto
+interface ProjetoInfoType {
+  descricao: string;
+  tipoDeInvestimento: string;
+  motivacao: string;
+  ganhosQualidadeVida: number;
+  ganhoValorizacao: number;
+  ganhoAluguel: number;
+  economiaGerada: number;
+  investimentoViabilizacao: number;
+  impactoFamiliar: string;
+  satisfacaoPessoal: string;
+}
+
+// Interface para o crédito
+interface CreditoInfoType {
+  taxaJurosMensal: number;
+  quantidadeParcelas: number;
+}
+
+// Interface para o resultado do custo de crédito
+interface CustoCreditoInfoType {
+  parcelaMensal: number;
+  custoTotal: number;
+  jurosTotal: number;
+}
+
+// Interface para o custo de oportunidade
+interface CustoOportunidadeType {
+  ano: number;
+  ganhoPotencial: number;
+  custoEmprestimo: number;
+}
+
 export default function AnalisePatrimonialPage() {
   // Estado para controlar a etapa atual do formulário
   const [step, setStep] = useState(1);
   
   // Estados para armazenar as informações do projeto e do crédito
-  const [projetoInfo, setProjetoInfo] = useState({
+  const [projetoInfo, setProjetoInfo] = useState<ProjetoInfoType>({
     descricao: '',
     tipoDeInvestimento: 'Reforma Residencial',
     motivacao: '',
@@ -39,17 +73,17 @@ export default function AnalisePatrimonialPage() {
     satisfacaoPessoal: '',
   });
 
-  const [creditoInfo, setCreditoInfo] = useState({
+  const [creditoInfo, setCreditoInfo] = useState<CreditoInfoType>({
     taxaJurosMensal: 1,
     quantidadeParcelas: 120,
   });
 
   // Estados para armazenar resultados dos cálculos
-  const [custoCreditoInfo, setCustoCreditoInfo] = useState(null);
+  const [custoCreditoInfo, setCustoCreditoInfo] = useState<CustoCreditoInfoType | null>(null);
   const [graficoVisivel, setGraficoVisivel] = useState(false);
   const [dadosGraficoPagamento, setDadosGraficoPagamento] = useState([]);
   const [dadosGrafico, setDadosGrafico] = useState([]);
-  const [custoOportunidade, setCustoOportunidade] = useState(undefined);
+  const [custoOportunidade, setCustoOportunidade] = useState<CustoOportunidadeType | undefined>(undefined);
 
   // Formatador de moeda
   const formatoMoeda = new Intl.NumberFormat('pt-BR', {
@@ -79,7 +113,7 @@ export default function AnalisePatrimonialPage() {
     : 0;
 
   // Handler para atualizar as informações do projeto
-  const handleProjetoChange = (e) => {
+  const handleProjetoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
     if (name === 'descricao' || name === 'motivacao' || name === 'impactoFamiliar' || name === 'satisfacaoPessoal') {
@@ -95,12 +129,12 @@ export default function AnalisePatrimonialPage() {
   };
 
   // Handler para atualizar o tipo de projeto
-  const handleTipoProjetoChange = (valor) => {
+  const handleTipoProjetoChange = (valor: string) => {
     setProjetoInfo((prev) => ({ ...prev, tipoDeInvestimento: valor }));
   };
 
   // Handlers para atualizar as informações do crédito
-  const handleCreditoChange = (field, value) => {
+  const handleCreditoChange = (field: string, value: string) => {
     const numeroValue = parseFloat(value);
     setCreditoInfo((prev) => ({ 
       ...prev, 
@@ -108,7 +142,7 @@ export default function AnalisePatrimonialPage() {
     }));
   };
 
-  const handleParcelasChange = (value) => {
+  const handleParcelasChange = (value: number) => {
     setCreditoInfo((prev) => ({ 
       ...prev, 
       quantidadeParcelas: value 
